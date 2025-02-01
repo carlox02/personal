@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Be My Valentine?</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: pink;
+            text-align: center;
+            font-family: Arial, sans-serif;
+            overflow: hidden;
+        }
+        .container {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            position: relative;
+        }
+        button {
+            margin: 10px;
+            padding: 10px 20px;
+            border: none;
+            cursor: pointer;
+            font-size: 18px;
+            border-radius: 5px;
+        }
+        .yes {
+            background-color: red;
+            color: white;
+            font-size: 24px;
+        }
+        .no {
+            background-color: white;
+            color: black;
+            position: absolute;
+        }
+        .emoji-container {
+            display: none;
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 50px;
+            animation: fall 3s linear infinite;
+        }
+        @keyframes fall {
+            0% { transform: translateX(-50%) translateY(-100px); }
+            100% { transform: translateX(-50%) translateY(100vh); }
+        }
+        .wheel-container {
+            display: none;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container" id="question1">
+        <h1>Are you free on February 14th? ❤️</h1>
+        <button class="yes" onclick="nextQuestion('question2')">Yes</button>
+        <button class="no" onclick="denyDate()">No</button>
+    </div>
+    
+    <div class="container" id="question2" style="display:none;">
+        <h1>Will you be my Valentine? ❤️</h1>
+        <button class="yes" onclick="nextQuestion('wheel-container')">Yes</button>
+        <button class="no" class="movable" onmouseover="moveButton(this)">No</button>
+    </div>
+    
+    <div class="wheel-container" id="wheel-container" style="display:none;">
+        <h2>Let's decide what to do! 🎡</h2>
+        <button onclick="spinWheel()">Spin the Wheel</button>
+        <h3 id="food-result"></h3>
+        <button class="yes" onclick="finalQuestion()">Yes</button>
+        <button class="no" class="movable" onmouseover="moveButton(this)">No</button>
+    </div>
+    
+    <div class="container" id="final-question" style="display:none;">
+        <h1>Jungkook sucks huh? 🤔</h1>
+        <button class="yes" onclick="finalMessage()">Yes</button>
+        <button class="no" class="movable" onmouseover="moveButton(this)">No</button>
+    </div>
+    
+    <script>
+        function nextQuestion(nextId) {
+            document.querySelectorAll('.container, .wheel-container').forEach(el => el.style.display = 'none');
+            document.getElementById(nextId).style.display = 'block';
+        }
+        
+        function finalQuestion() {
+            document.getElementById('wheel-container').style.display = 'none';
+            document.getElementById('final-question').style.display = 'block';
+        }
+
+        function finalMessage() {
+            document.body.innerHTML = '<div class="container"><h1 style="color:red;">Alright, see you then!</h1>' +
+                                      '<h2>Be ready to pick me up, duh! 🚗💨</h2>' +
+                                      '<audio autoplay><source src="https://www.youtube.com/embed/izGwDsrQ1eQ?autoplay=1" type="audio/mpeg"></audio>' +
+                                      '</div>';
+            startEmojis();
+        }
+
+        function denyDate() {
+            document.body.innerHTML = '<h1 style="color:black;">Oh no! Maybe another time 😢</h1>';
+        }
+
+        function moveButton(button) {
+            let x = Math.random() * (window.innerWidth - 150);
+            let y = Math.random() * (window.innerHeight - 100);
+            button.style.position = 'absolute';
+            button.style.left = `${x}px`;
+            button.style.top = `${y}px`;
+        }
+
+        function spinWheel() {
+            let foodOptions = ["Chili's 🌶️", "Home Cooked Meal 🍲", "PHO! 🍜", "Movie Night 🎬", "Juicy Steak 🥩", "Surprise Date 💕"];
+            let randomChoice = foodOptions[Math.floor(Math.random() * foodOptions.length)];
+            document.getElementById('food-result').innerText = "We're doing: " + randomChoice;
+        }
+
+        function startEmojis() {
+            let emojiContainer = document.createElement('div');
+            emojiContainer.id = 'emoji-container';
+            document.body.appendChild(emojiContainer);
+            let emojis = ['🎆', '❤️', '🎇', '💖', '💘'];
+            setInterval(() => {
+                let emoji = document.createElement('div');
+                emoji.className = 'emoji-container';
+                emoji.innerHTML = emojis[Math.floor(Math.random() * emojis.length)];
+                emoji.style.left = Math.random() * 100 + 'vw';
+                document.body.appendChild(emoji);
+                setTimeout(() => emoji.remove(), 3000);
+            }, 300);
+        }
+    </script>
+</body>
+</html>
